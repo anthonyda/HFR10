@@ -17,7 +17,7 @@
 
         <shellControls:Header x:Name="Header"
                               HeaderContent="Connexion" />
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Background="#FF222A35">
             <RelativePanel x:Name="FormPanel"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
@@ -37,7 +37,7 @@
                            Style="{StaticResource TranslucentSubheaderTextBlockStyle}"
                            RelativePanel.Below="Logo" />
                 <TextBox x:Name="PseudoTextBox"
-                         Style="{StaticResource TransparentTextBoxStyle}"
+                         Style="{StaticResource AutoSuggestBoxTextBoxStyle}"
                          Margin="{StaticResource DefaultMarginTop}"
                          FontWeight="Medium"
                          PlaceholderText="pseudo"
