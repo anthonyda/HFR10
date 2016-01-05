@@ -7,12 +7,9 @@
 
     <style type='text/css'>
         /* PLACEHOLDER FOR USER FONT SIZE */
-        .message .content {
-            font-size: %%FONTSIZE%%em;
-        }
 
         .message .header {
-            background-color: rgba(%%ACCENTCOLOR%%, 0.50);
+            background-color: rgba(%%ACCENTCOLOR%%, 0.80);
         }
     </style>
 </head>
@@ -47,19 +44,10 @@
             location.hash = "#" + hash;
         }
 
-        function quote(postId) {
+        function quotes(postId) {
             window.location = "http://local/quote?postId=" + postId;
             return false;
         }
-
-        function multiQuote(postId) {
-            window.location = "http://local/multiQuote?postId=" + postId;
-        }
-
-        function edit(postId) {
-            window.location = "http://local/edit?postId=" + postId;
-        }
-
     </script>
 
 </body>
