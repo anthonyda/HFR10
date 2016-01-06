@@ -17,7 +17,7 @@
 
         <shellControls:Header x:Name="Header"
                               HeaderContent="Connexion" />
-        <Grid Grid.Row="1" Background="#FF222A35">
+        <Grid Grid.Row="1">
             <RelativePanel x:Name="FormPanel"
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"
@@ -37,7 +37,7 @@
                            Style="{StaticResource TranslucentSubheaderTextBlockStyle}"
                            RelativePanel.Below="Logo" />
                 <TextBox x:Name="PseudoTextBox"
-                         Style="{StaticResource AutoSuggestBoxTextBoxStyle}"
+                         Style="{StaticResource TransparentTextBoxStyle}"
                          Margin="{StaticResource DefaultMarginTop}"
                          FontWeight="Medium"
                          PlaceholderText="pseudo"
@@ -47,7 +47,8 @@
                          RelativePanel.Below="PseudoHeaderTextBlock"
                          RelativePanel.AlignLeftWithPanel="True"
                          RelativePanel.AlignRightWithPanel="True" 
-                         KeyDown="PseudoTextBox_KeyDown"/>
+                         KeyDown="PseudoTextBox_KeyDown"
+                         Loaded="PseudoTextBox_Loaded"/>
                 <TextBlock x:Name="PasswordHeaderTextBlock"
                            Text="MOT DE PASSE"
                            Margin="{StaticResource DefaultMarginTop}"

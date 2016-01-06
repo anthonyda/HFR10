@@ -14,14 +14,31 @@ namespace Hfr.Views.MainPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            Loc.Editor.PropertyChanged += Editor_PropertyChanged;
             await Loc.Editor.OnNavigatedTo(e.Parameter);
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            base.OnNavigatedFrom(e);
+            base.OnNavigatingFrom(e);
+            Loc.Editor.PropertyChanged -= Editor_PropertyChanged;
             Loc.Editor.OnNavigatedFrom();
+        }
+
+        private void Editor_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(Loc.Editor.IsEditorEnabled))
+            {
+                if (Loc.Editor.IsEditorEnabled)
+                {
+                    MessageTextBlock.IsEnabled = true;
+                    MessageTextBlock.Focus(Windows.UI.Xaml.FocusState.Keyboard);
+                }
+                else
+                {
+                    MessageTextBlock.IsEnabled = false;
+                }
+            }
         }
     }
 }

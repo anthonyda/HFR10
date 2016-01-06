@@ -6,6 +6,8 @@ using Windows.UI.Xaml.Controls;
 using Hfr.Model;
 using Hfr.Utilities;
 using Hfr.ViewModel;
+using Hfr.Models;
+using System.Threading.Tasks;
 
 namespace Hfr.Views.MainPages
 {
@@ -20,19 +22,51 @@ namespace Hfr.Views.MainPages
         private void CurrentTopic_TopicReadyToBeDisplayed(Topic topic)
         {
             TopicWebView.NavigationCompleted += TopicWebViewOnNavigationCompleted;
-            TopicWebView.Navigate(Strings.TopicPageCacheUri);
+            if (topic != null)
+                TopicWebView.Navigate(Strings.TopicPageCacheUri);
+            else
+                TopicWebView.NavigateToString("");
         }
 
         private async void TopicWebViewOnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             TopicWebView.NavigationCompleted -= TopicWebViewOnNavigationCompleted;
-            if (!string.IsNullOrEmpty(Loc.Topic.CurrentTopic.TopicReponseId))
+
+            if (Loc.Editor.CurrentEditor != null)
             {
-                await TopicWebView.InvokeScriptAsync("scrollTo", new string[1]
+                var intent = Loc.Editor.CurrentEditor.Intent;
+                switch (intent)
                 {
-                    Loc.Topic.CurrentTopic.TopicReponseId
-                });
+                    case EditorIntent.New:
+                    case EditorIntent.Quote:
+                    case EditorIntent.MultiQuote:
+                        await ScrollTo("bas");
+                        break;
+                    case EditorIntent.Edit:
+                        var anchor = "";
+                        if (Loc.Editor.CurrentEditor.Data.TryGetValue("numreponse", out anchor))
+                        {
+                            if (string.IsNullOrEmpty(anchor)) return;
+                            await ScrollTo(anchor);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                Loc.Editor.CurrentEditor = null;
             }
+            else
+            {
+                if (!string.IsNullOrEmpty(Loc.Topic.CurrentTopic?.TopicReponseId))
+                {
+                    await ScrollTo(Loc.Topic.CurrentTopic.TopicReponseId);
+                }
+            }
+        }
+
+        async Task ScrollTo(string anchor)
+        {
+            await TopicWebView.InvokeScriptAsync("scrollTo", new string[1] { anchor });
         }
 
         private void TopicWebView_OnNavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
@@ -45,7 +79,30 @@ namespace Hfr.Views.MainPages
                     var decoder = new WwwFormUrlDecoder(args.Uri.Query);
                     var postId = decoder.FirstOrDefault(x => x.Name == "postId")?.Value;
                     if (!string.IsNullOrEmpty(postId))
-                        Loc.Topic.ShowEditorCommand.Execute(Loc.Topic.CurrentTopic.TopicNewPostUriForm + $"&numrep={postId}");
+                    {
+                        var package = new EditorPackage(EditorIntent.Quote, Loc.Topic.CurrentTopic.TopicNewPostUriForm + $"&numrep={postId}");
+                        Loc.Topic.ShowEditorCommand.Execute(package);
+                    }
+                }
+                else if (args.Uri.AbsoluteUri.Contains("multiQuote"))
+                {
+                    var decoder = new WwwFormUrlDecoder(args.Uri.Query);
+                    var postId = decoder.FirstOrDefault(x => x.Name == "postId")?.Value;
+                    if (!string.IsNullOrEmpty(postId))
+                    {
+                        var package = new EditorPackage(EditorIntent.MultiQuote, Loc.Topic.CurrentTopic.TopicNewPostUriForm + $"&numrep={postId}");
+                        Loc.Topic.ShowEditorCommand.Execute(package);
+                    }
+                }
+                else if (args.Uri.AbsoluteUri.Contains("edit"))
+                {
+                    var decoder = new WwwFormUrlDecoder(args.Uri.Query);
+                    var postId = decoder.FirstOrDefault(x => x.Name == "postId")?.Value;
+                    if (!string.IsNullOrEmpty(postId))
+                    {
+                        var package = new EditorPackage(EditorIntent.Edit, Loc.Topic.CurrentTopic.TopicNewPostUriForm + $"&numreponse={postId}");
+                        Loc.Topic.ShowEditorCommand.Execute(package);
+                    }
                 }
                 else
                 {

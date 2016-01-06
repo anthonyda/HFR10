@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="using:Hfr.Resources">
+
     <x:String x:Key="HamburgerPath">M0,21.388L30.408001, 21.388 30.408001, 23.414    0,23.414z 
                         M0,10.695L30.408001, 10.695 30.408001, 12.721    0,12.721z 
                         M0,0     L30.408001, 0      30.408001, 2.0259995 0,2.0259995z</x:String>
@@ -18,6 +19,20 @@
                 Value="0" />
         <Setter Property="Padding"
                 Value="0" />
+    </Style>
+
+    <Style x:Key="VerticalScrollViewerStyle"
+           TargetType="ScrollViewer">
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                Value="Disabled" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
+                Value="Auto" />
+        <Setter Property="ScrollViewer.HorizontalScrollMode"
+                Value="Disabled" />
+        <Setter Property="ScrollViewer.VerticalScrollMode"
+                Value="Enabled" />
+        <Setter Property="ScrollViewer.ZoomMode"
+                Value="Disabled" />
     </Style>
 
     <!--
@@ -743,7 +758,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="6"/>
+                                <ColumnDefinition Width="6" />
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Name="OverflowTextLabel"
                                        Text="{TemplateBinding Label}"
@@ -777,5 +792,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 </ResourceDictionary>

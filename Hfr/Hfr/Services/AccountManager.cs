@@ -27,7 +27,7 @@ namespace Hfr.Services
             Task.Run(() => Initialize());
         }
 
-        async Task Initialize()
+        public async Task Initialize()
         {
             var accounts = accountDataRepository?.GetAccounts();
             if (accounts != null && accounts.Any())
@@ -109,6 +109,7 @@ namespace Hfr.Services
                 ApplicationSettingsHelper.ReadResetSettingsValue(nameof(CurrentAccount.Pseudo), false);
                 ApplicationSettingsHelper.ReadResetSettingsValue(nameof(CurrentAccount.Password), false);
             }
+            Accounts.RemoveAll(x => x.Pseudo == CurrentAccount.Pseudo);
             CurrentAccount = null;
         }
     }
